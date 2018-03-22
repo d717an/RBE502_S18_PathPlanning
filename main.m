@@ -6,8 +6,6 @@ close all;
 
 robot_params = containers.Map;
 robot_params('l') = 1;
-%robot_params('kp') = 10;
-%robot_params('kd') = 10;
 
 % Sine wave properties
 A = 1;
@@ -17,9 +15,9 @@ init_state = [-2, 0, A*freq, -1];
 
 % Positive values make the system unstable
 % The more negative, the more accurate the system but slower response
-lambda1 = -50;
-lambda2 = -50;
-modulus = -50;
+lambda1 = -40;
+lambda2 = -40;
+modulus = -40;
 damp = 1;
 
 k = zeros(4, 1);
@@ -29,23 +27,21 @@ k(3) = modulus^2 + 2*damp*modulus*lambda2;
 k(4) = modulus^2 * lambda2;
 
 [T, X] = ode45(@(t, x)MobileRobot(t, x, ...
-                                  chain_form(t, sin_wave(A, freq, t), atan(A*freq*cos(t)), 0, robot_params), ...
+                                  chain_form(t, path_generator(A, freq, t), atan2(A*freq*cos(freq*t), 1), 0, robot_params), ...
                                   [1, -A*(freq^3)*cos(freq*t)], robot_params, k), [0, 10], init_state);
 
-
+size(X, 1)
+DrawRobot(T, X, path_generator(A, freq, T), robot_params);
 
 figure
 hold on
-plot(T, sin_wave(A, freq, T), 'Color', 'r');
+plot(T, path_generator(A, freq, T), 'Color', 'r');
 plot(T, X(:, 4), 'Color', 'b');
 legend('Desired Trajectory', 'Robot Trajectory')
 
 end
 
-% Path generator
-function yd = sin_wave(amplitude, freq, t)
-    yd = amplitude * sin(freq * t);
-end
+
 
 % Function to transform set of 
 % states [x, y, theta, phi] -> [x1, x2, x3, x4]
