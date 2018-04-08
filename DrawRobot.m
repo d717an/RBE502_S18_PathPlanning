@@ -5,6 +5,9 @@ figure
 hold on
 plot(t, desired_trajectory, 'Color', 'r');
 axis([0, t(n_state), -5, 5])
+ylabel('Y Position [m]');
+xlabel('X Position [m]');
+title('Preliminary Path Following Simulation');
 
 for i=1:n_state
     
