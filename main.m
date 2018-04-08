@@ -8,8 +8,8 @@ robot_params = containers.Map;
 robot_params('l') = 1;
 
 % Sine wave properties
-A = 1;
-freq = pi;
+A = 3;
+freq = 0.2*pi;
 
 init_state = [-2, 0, A*freq, -1];
 
