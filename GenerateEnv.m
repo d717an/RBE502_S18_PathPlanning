@@ -70,3 +70,20 @@ end
 
 end
 
+function [l1, l2, l3] = draw_triangle(origx, origy, bottom_side, angle, left_side)
+% Function to draw a triangle given a bottom left corner, length of bottom
+% side, left side and the angle between the two sides
+l1 = line([origx, origx + bottom_side], [origy, origy], 'Color', 'r');
+l2 = line([origx, origx + left_side * cos(angle)], [origy, origy + left_side * sin(angle)], 'Color', 'r');
+l3 = line([origx + bottom_side, origx + left_side * cos(angle)], [origy, origy + left_side * sin(angle)], 'Color', 'r');
+end
+
+function [l1, l2, l3, l4] = draw_rect(startx, starty, lengthx, lengthy)
+% Function to draw a rectangle given starting point x, y, width and length
+
+l1 = line([startx, startx + lengthx], [starty, starty], 'Color', 'r');
+l2 = line([startx, startx], [starty, starty + lengthy], 'Color', 'r');
+l3 = line([startx, startx + lengthx], [starty + lengthy, starty + lengthy], 'Color', 'r');
+l4 = line([startx + lengthx, startx + lengthx], [starty + lengthy, starty], 'Color', 'r');
+end
+

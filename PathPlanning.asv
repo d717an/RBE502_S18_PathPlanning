@@ -29,7 +29,7 @@
 %   - y(s), m
 %   - th(s), rad
 %   Stats
-%   - 5x2 cell array of convergence statistics
+%   - 5x1 array of convergence statistics
 %   - PassBool = 1 if path planning converged
 %   - error in X posn, m
 %   - error in Y posn, m
@@ -106,12 +106,12 @@ for iter = 1:maxIter
     % Intialize the jacobian
     J = zeros(4);
 
-    for ii = 1:4
-        for jj=1:4
+    for i = 1:4
+        for j=1:4
             % Finite difference approximation of the jacobian
             Ptemp = P;
-            Ptemp(jj) = P(jj)+h;
-            J(ii,jj) = (Xs(ii) - FwdFcns{ii}(Ptemp(1),Ptemp(2),Ptemp(3),Ptemp(4)))/h;
+            Ptemp(j) = P(j)+h;
+            J(i,j) = (Xs(i) - FwdFcns{i}(Ptemp(1),Ptemp(2),Ptemp(3),Ptemp(4)))/h;
         end
     end
 
@@ -120,7 +120,7 @@ for iter = 1:maxIter
 
     % Update the pose with a small gain constant for stability
     P = P + 0.2*Dp;
-
+    
     % Update the command window with the progress
     if iter > 1
         %Delete previous iteration count
@@ -129,29 +129,27 @@ for iter = 1:maxIter
     msg = sprintf('%d/%d', iter, maxIter);
     fprintf(msg);
     pause(.001); % allows time for display to update
-
+   
 end
 
 fprintf('\n')
 
 % Create the Stats vector
-Stats = cell(5,2);
-Stats{1,1} = 'Convergence Bool';Stats{1,2} = PassBool;
-Stats{2,1} = 'X Error';Stats{2,2} = Dx(1,1);
-Stats{3,1} = 'Y Error';Stats{3,2} = Dx(2,1);
-Stats{4,1} = 'Heading Error';Stats{4,2} = Dx(3,1);
-Stats{5,1} = 'Curvature Error';Stats{5,2} = Dx(4,1);
+Stats(:,1) = ['Convergence Bool'; 'X Error'; 'Y Error'; 'Heading Err
+Stats(:,2) = [PassBool;Dx(1,1);Dx(2,1);Dx(3,1); Dx(4,1)];
 
 % Form the cubic polynomial
-npts = 51;
+npts = 100;
 s = linspace(0,P(4),npts);
-PlannedPath = zeros(3,npts);
-for ii = 1:npts
-    PlannedPath(1,ii) = feval(fun_xs,P(1),P(2),P(3),s(ii));
-    PlannedPath(2,ii) = feval(fun_ys,P(1),P(2),P(3),s(ii));
-    PlannedPath(3,ii) = feval(fun_ths,P(1),P(2),P(3),s(ii));
+PlannedPath = zeros(npts,3);
+for i = 1:npts
+    PlannedPath(i,1) = feval(fun_xs,P(1),P(2),P(3),s(i));
+    PlannedPath(i,2) = feval(fun_ys,P(1),P(2),P(3),s(i));
+    PlannedPath(i,3) = feval(fun_ths,P(1),P(2),P(3),s(i));
 end
- 
+
+
+% 
 % % starting with the first polynomial as the intial guess, will now 
 % D = 0;
 % P2 = [P(1); P(2); P(3); D; P(4)];   % initialize and add the fourth parameter, D

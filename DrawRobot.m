@@ -1,15 +1,13 @@
-function DrawRobot(t, states, desired_trajectory, params)
+function DrawRobot(t, states, x_des, y_des, params)
 n_state = size(states, 1);
-
-figure
-hold on
-plot(t, desired_trajectory, 'Color', 'r');
-axis([0, t(n_state), -5, 5])
+figure; hold on;
+plot(x_des(:),y_des(:), 'r');
+axis([min(x_des)-1, max(x_des)+1, min(y_des)-1, max(y_des)+1]); 
 ylabel('Y Position [m]');
 xlabel('X Position [m]');
-title('Preliminary Path Following Simulation');
+title('Path Following Simulation');
 
-for i=1:n_state
+for i=1:2:n_state
     
     dt = t(1);
     if i > 1
@@ -33,11 +31,10 @@ for i=1:n_state
     l3 = line([p3(1), p4(1)], [p3(2), p4(2)]);
     l4 = line([p4(1), p1(1)], [p4(2), p1(2)]);
     
-    pause(dt);
-    if(i < size(t, 1) - 1)
+    pause(0.001)
+    if(i < size(t, 1) - 2)
         delete(cog);
         delete(vehicle_direction);
-        
         delete(l1);
         delete(l2);
         delete(l3);
