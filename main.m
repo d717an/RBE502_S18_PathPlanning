@@ -5,7 +5,7 @@ function main()
 clear; clc; close all; w = warning ('off','all');
 
 % Choose whether or not to run obstacle avoidance
-AvoidObstacles = 1;
+AvoidObstacles = 0;
 
 % Define robot plotting par
 robot_params = containers.Map;

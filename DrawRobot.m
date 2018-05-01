@@ -6,6 +6,9 @@ axis([min(x_des)-1, max(x_des)+1, min(y_des)-1, max(y_des)+1]);
 ylabel('Y Position [m]');xlabel('X Position [m]');
 title('Path Following Simulation');
 
+% Pause only for recording
+% pause(5)
+
 for i=1:2:n_state
     
     dt = t(1);

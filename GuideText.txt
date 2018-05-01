@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+GUIDELINE TEXT:
+
+Project: 		Model and Control of a Four-Wheel Mobile Robot
+Team Members:	Ryan Ferrin, Tri Khuu, Nick Longworth, Taylor Marsh, Dan Sullivan
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+FILES:
+
+main.m 				- wrapper function that performs complete simulation
+PathPlanning.m  	- creates a cubic trajectory from X0 to Xf
+DrawRobot.m 		- creates an 2D animation of the robot following the path
+GenerateEnv.m  		- creates an obstacle-laden environment (not used)
+Resources(folder)	- contains pdfs of our
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+USAGE:
+
+The simulation can be run in it's entirety from main.m. Intial conditions and ending conditions that produce a stable output have been chosen. Unfortunately, we were not able to get the obstacle avoidance feature of PathPlanning to converge. You can view this by changing "AvoidObstacles" from 0 (off) to 1 (on). If the path does not converge, the simulation will proceed with the basic cubic trajectory.
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
