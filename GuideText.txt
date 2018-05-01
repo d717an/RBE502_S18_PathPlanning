@@ -21,5 +21,9 @@ USAGE:
 
 The simulation can be run in it's entirety from main.m. Intial conditions and ending conditions that produce a stable output have been chosen. Unfortunately, we were not able to get the obstacle avoidance feature of PathPlanning to converge. You can view this by changing "AvoidObstacles" from 0 (off) to 1 (on). If the path does not converge, the simulation will proceed with the basic cubic trajectory.
 
+The program also allow the user to pick the start and end position of the robot. Simply modify the variables X0 and Xfdes in the main file. X0 and Xfdes are vectors representing the pose of the robot ([x, y, theta, phi])
+
+In order to generate an evironment with obstacles, simply run the file GenerateEnv.m. It will prompt the user to choose for the shape of obstacle (rectangle, triangle) and allow the user to enter the coordinates and dimensions of each shape.
+
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
