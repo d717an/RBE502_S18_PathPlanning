@@ -1,19 +1,43 @@
 function main()
 
 % Clean the workspace and environment
-clear; clc; close all;
+%   - turn off warnings
+clear; clc; close all; w = warning ('off','all');
 
+% Choose whether or not to run obstacle avoidance
+AvoidObstacles = 1;
+
+% Define robot plotting par
 robot_params = containers.Map;
 robot_params('l') = 1;
 
 % Define desired starting and ending robot poses
-X0 = [0,0,-pi/4,0];
-Xfdes = [4,1,pi/8,0];
+X0 = [0,0,-pi/4,0]; Xfdes = [4,1,pi/8,0];
 
-[Path,PathStats] = PathPlanning(X0,Xfdes,0,0,0);
+fprintf('\nDeriving cubic path from: x = %.2f m, y = %.2f, heading = %.2f rad\n',X0(1),X0(2),X0(3));
+fprintf('to xf = %.2f m, yf = %.2f, heading = %.2f rad\n',Xfdes(1),Xfdes(2),Xfdes(3));
 
-% Print the solved path results to the workspace
-PathStats
+% set last three to 0 for normal
+[Path,Success,BasicPathStats,ObstSuccess,ObstStats] = PathPlanning(X0,Xfdes,3,0.2,AvoidObstacles);
+
+if Success == 1
+    fprintf('\nBasic path planning successful!\n');
+    % Print the solved path results to the workspace
+    BasicPathStats
+else
+    fprintf('\nBasic path planning unsuccessful... exiting code\n');
+    exit
+end
+
+if ObstSuccess == -1
+    fprintf('\nObstacle avoidance not attempted (recommended)\n');
+elseif ObstSuccess == 1
+    fprintf('\nPath planning with obstacle avoidance was successful!\n');
+    % Print the solved path results to the workspace
+    ObstStats
+else
+    fprintf('\nPath planning with obstacle avoidance was successful...continuing with basic path\n');
+end
 
 % Making a simplifying assumption that each point on the path is 1 second
 %   - define the derivatives of the solved path for desired control inputs
@@ -38,6 +62,8 @@ dy_d3 = diff(dy_d2)./diff(tt2);
 tt3 = 0:(tt2(end)/(length(tt2)-2)):tt2(end);
 
 % Calculate control inputs
+ud1 = zeros(1,size(Time,2));
+ud2 = zeros(1,size(Time,2));
 for i=1:size(Time,2)
     
     % Differentiating reduced vector lengths
@@ -71,10 +97,14 @@ k(4) = modulus^2 * lambda2;
 % Set the robot's initial state
 init_state = [0, 0, 0, 0];
 
+fprintf('\nStarting ode45...\n');
+
 [T, X] = ode45(@(t, x)MobileRobot(t, x, ...
           chain_form(interp1(Time,Path(1,:),t),interp1(Time,Path(2,:),t),interp1(Time,Path(3,:),t),0,robot_params), ...
           [interp1(Time,ud1,t), interp1(Time,ud2,t)], robot_params, k), [0 Time(end)], init_state);   
-                              
+
+fprintf('\nStarting simulation...\n');
+      
 % Plot the robot's actual path against the desired path                              
 figure;hold on
 plot(Path(1,:),Path(2,:),'k.');
@@ -83,6 +113,8 @@ legend('Desired Trajectory','Robot Trajectory','Location','Northwest')
 
 % Animate the Robot following the path
 DrawRobot(T,X,Path(1,:),Path(2,:),robot_params);
+
+fprintf('\nMain function complete!\n');
 
 end
 

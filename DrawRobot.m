@@ -1,10 +1,9 @@
 function DrawRobot(t, states, x_des, y_des, params)
 n_state = size(states, 1);
-figure; hold on;
+figure; hold on; grid on;
 plot(x_des(:),y_des(:), 'r');
 axis([min(x_des)-1, max(x_des)+1, min(y_des)-1, max(y_des)+1]); 
-ylabel('Y Position [m]');
-xlabel('X Position [m]');
+ylabel('Y Position [m]');xlabel('X Position [m]');
 title('Path Following Simulation');
 
 for i=1:2:n_state
